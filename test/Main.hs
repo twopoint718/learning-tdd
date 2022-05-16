@@ -44,3 +44,14 @@ main = hspec $
             let actualValue = portfolio'' `evaluate` USD
 
             actualValue `shouldBe` expectedValue
+
+        it "addition of dollars and wons" $ do
+            let oneDollar = newMoney 1 USD
+            let elevenHundredWon = newMoney 1100 KRW
+            let portfolio = newPortfolio `add` oneDollar
+            let portfolio' = portfolio `add` elevenHundredWon
+
+            let expectedValue = newMoney 2200 KRW
+            let actualValue = portfolio' `evaluate` KRW
+
+            actualValue `shouldBe` expectedValue

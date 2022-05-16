@@ -15,6 +15,7 @@ convert money targetCurrency =
     if currency money == targetCurrency then
         amount money
     else
-        amount money * eurToUsd
+        amount money * (exchangeRate (currency money) targetCurrency)
   where
-    eurToUsd = 1.2
+    exchangeRate EUR USD = 1.2
+    exchangeRate USD KRW = 1100
