@@ -31,5 +31,22 @@ executable learning-tdd
     -- other-extensions:
     build-depends:    base ^>=4.16.1.0
                     , hspec
+                    , money-lib
     hs-source-dirs:   app
     default-language: Haskell2010
+
+library money-lib
+    build-depends:    base ^>=4.16.1.0
+    exposed-modules:  Stocks.Money
+                    , Stocks.Portfolio
+    hs-source-dirs:   lib
+    default-language: Haskell2010
+
+test-suite money-test
+    main-is:          Main.hs
+    build-depends:    base ^>=4.16.1.0
+                    , hspec
+                    , money-lib
+    hs-source-dirs:   test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
