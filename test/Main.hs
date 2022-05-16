@@ -32,3 +32,15 @@ main = hspec $
             let portfolioInDollars = portfolio'' `evaluate` USD
 
             portfolioInDollars `shouldBe` fifteenDollars
+
+        it "addition of dollars and euros" $ do
+            let fiveDollars = newMoney 5 USD
+            let tenEuros = newMoney 10 EUR
+            let portfolio = newPortfolio
+            let portfolio' = portfolio `add` fiveDollars
+            let portfolio'' = portfolio' `add` tenEuros
+
+            let expectedValue = newMoney 17 USD
+            let actualValue = portfolio'' `evaluate` USD
+
+            actualValue `shouldBe` expectedValue
