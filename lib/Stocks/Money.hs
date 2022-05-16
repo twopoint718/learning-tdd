@@ -9,7 +9,7 @@ module Stocks.Money
     )
 where
 
-data Currency = EUR | USD | KRW deriving (Eq , Show)
+data Currency = EUR | USD | KRW | Kalganid deriving (Eq , Show)
 data Money = Money { amount :: Float, currency :: Currency }
     deriving (Eq, Show)
 

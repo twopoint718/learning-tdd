@@ -25,7 +25,7 @@ main = hspec $
 
             let fiveDollars = newMoney 5 USD
             let tenDollars = newMoney 10 USD
-            let fifteenDollars = newMoney 15 USD
+            let fifteenDollars = Right (newMoney 15 USD)
 
             let portfolio' = portfolio `add` fiveDollars
             let portfolio'' = portfolio' `add` tenDollars
@@ -40,7 +40,7 @@ main = hspec $
             let portfolio' = portfolio `add` fiveDollars
             let portfolio'' = portfolio' `add` tenEuros
 
-            let expectedValue = newMoney 17 USD
+            let expectedValue = Right (newMoney 17 USD)
             let actualValue = portfolio'' `evaluate` USD
 
             actualValue `shouldBe` expectedValue
@@ -51,7 +51,21 @@ main = hspec $
             let portfolio = newPortfolio `add` oneDollar
             let portfolio' = portfolio `add` elevenHundredWon
 
-            let expectedValue = newMoney 2200 KRW
+            let expectedValue = Right (newMoney 2200 KRW)
             let actualValue = portfolio' `evaluate` KRW
 
             actualValue `shouldBe` expectedValue
+
+        it "addition with multiple missing exchange rates" $ do
+            let oneDollar = newMoney 1 USD
+            let oneEuro = newMoney 1 EUR
+            let oneWon = newMoney 1 KRW
+
+            let portfolio = newPortfolio `add` oneDollar
+            let portfolio' = portfolio `add` oneEuro
+            let portfolio'' = portfolio' `add` oneWon
+
+            let expectedErrorMessage = Left "Missing exchange rate(s): KRW->Kalganid, EUR->Kalganid, USD->Kalganid"
+            let actualError = portfolio'' `evaluate` Kalganid
+
+            actualError `shouldBe` expectedErrorMessage
