@@ -4,6 +4,13 @@ import Test.Hspec
 
 import Stocks.Money
 import Stocks.Portfolio
+import Stocks.Bank
+
+bank =
+    let
+        bank' = newBank `addExchangeRate` (EUR, USD, 1.2)
+    in
+        bank' `addExchangeRate` (USD, KRW, 1100)
 
 main :: IO ()
 main = hspec $
@@ -29,7 +36,7 @@ main = hspec $
 
             let portfolio' = portfolio `add` fiveDollars
             let portfolio'' = portfolio' `add` tenDollars
-            let portfolioInDollars = portfolio'' `evaluate` USD
+            let portfolioInDollars = portfolio'' `evaluate` bank $ USD
 
             portfolioInDollars `shouldBe` fifteenDollars
 
@@ -41,7 +48,7 @@ main = hspec $
             let portfolio'' = portfolio' `add` tenEuros
 
             let expectedValue = Right (newMoney 17 USD)
-            let actualValue = portfolio'' `evaluate` USD
+            let actualValue = portfolio'' `evaluate` bank $ USD
 
             actualValue `shouldBe` expectedValue
 
@@ -52,7 +59,7 @@ main = hspec $
             let portfolio' = portfolio `add` elevenHundredWon
 
             let expectedValue = Right (newMoney 2200 KRW)
-            let actualValue = portfolio' `evaluate` KRW
+            let actualValue = portfolio' `evaluate` bank $ KRW
 
             actualValue `shouldBe` expectedValue
 
@@ -66,6 +73,18 @@ main = hspec $
             let portfolio'' = portfolio' `add` oneWon
 
             let expectedErrorMessage = Left "Missing exchange rate(s): KRW->Kalganid, EUR->Kalganid, USD->Kalganid"
-            let actualError = portfolio'' `evaluate` Kalganid
+            let actualError = portfolio'' `evaluate` bank $ Kalganid
 
             actualError `shouldBe` expectedErrorMessage
+
+        it "conversion" $ do
+            let bank = newBank `addExchangeRate` (EUR, USD, 1.2)
+            let tenEuros = newMoney 10 EUR
+            let Validation (Right actualConvertedMoney) = bank `convert` tenEuros $ USD
+            actualConvertedMoney `shouldBe` newMoney 12 USD
+
+        it "conversion with missing exchange rate" $ do
+            let bank = newBank
+            let tenEuros = newMoney 10 EUR
+            let Validation (Left [err]) = bank `convert` tenEuros $ Kalganid
+            err `shouldBe` "EUR->Kalganid"
