@@ -77,14 +77,15 @@ main = hspec $
 
             actualError `shouldBe` expectedErrorMessage
 
-        it "conversion" $ do
-            let bank = newBank `addExchangeRate` (EUR, USD, 1.2)
+        it "conversion with different rates between two curriencies" $ do
             let tenEuros = newMoney 10 EUR
             let Validation (Right actualConvertedMoney) = bank `convert` tenEuros $ USD
             actualConvertedMoney `shouldBe` newMoney 12 USD
+            let bank' = bank `addExchangeRate` (EUR, USD, 1.3)
+            let Validation (Right actualConvertedMoney') = bank' `convert` tenEuros $ USD
+            actualConvertedMoney' `shouldBe` newMoney 13 USD
 
         it "conversion with missing exchange rate" $ do
-            let bank = newBank
             let tenEuros = newMoney 10 EUR
             let Validation (Left [err]) = bank `convert` tenEuros $ Kalganid
             err `shouldBe` "EUR->Kalganid"
