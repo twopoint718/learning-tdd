@@ -1,12 +1,18 @@
-{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE
+        DeriveFunctor,
+        GeneralizedNewtypeDeriving,
+        UndecidableInstances
+#-}
 
 module Stocks.Bank where
 
 import qualified Data.Map as Map
+import GHC.Exts (IsList)
 
 import Stocks.Money
 
-data Bank = Bank (Map.Map (Currency, Currency) Float)
+newtype Bank = Bank (Map.Map (Currency, Currency) Float)
+    deriving IsList
 
 newtype Validation e r = Validation (Either e r) deriving (Eq, Show, Functor)
 

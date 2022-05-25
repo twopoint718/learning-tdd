@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedLists #-}
+
 module Main where
 
 import Test.Hspec
@@ -6,11 +8,11 @@ import Stocks.Money
 import Stocks.Portfolio
 import Stocks.Bank
 
+bank :: Bank
 bank =
-    let
-        bank' = newBank `addExchangeRate` (EUR, USD, 1.2)
-    in
-        bank' `addExchangeRate` (USD, KRW, 1100)
+    [ ((EUR, USD), 1.2)
+    , ((USD, KRW), 1100)
+    ]
 
 main :: IO ()
 main = hspec $
