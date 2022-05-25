@@ -83,7 +83,7 @@ main = hspec $
             let tenEuros = newMoney 10 EUR
             let Validation (Right actualConvertedMoney) = bank `convert` tenEuros $ USD
             actualConvertedMoney `shouldBe` newMoney 12 USD
-            let bank' = bank `addExchangeRate` (EUR, USD, 1.3)
+            let bank' = addExchangeRate (EUR, USD) 1.3 bank
             let Validation (Right actualConvertedMoney') = bank' `convert` tenEuros $ USD
             actualConvertedMoney' `shouldBe` newMoney 13 USD
 

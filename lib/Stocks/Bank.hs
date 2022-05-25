@@ -24,9 +24,8 @@ instance Semigroup s => Applicative (Validation s) where
 newBank :: Bank
 newBank = Bank Map.empty
 
-addExchangeRate :: Bank -> (Currency, Currency, Float) -> Bank
-addExchangeRate (Bank bank) (fromCurr, toCurr, rate) =
-    Bank (Map.insert (fromCurr, toCurr) rate bank)
+addExchangeRate :: (Currency, Currency) -> Float -> Bank -> Bank
+addExchangeRate k v (Bank bank) = Bank (Map.insert k v bank)
 
 convert :: Bank -> Money -> Currency -> Validation [String] Money
 convert (Bank bank) money toCurr = Validation $
