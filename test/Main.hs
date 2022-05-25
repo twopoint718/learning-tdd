@@ -30,38 +30,32 @@ main = hspec $
             actualMoneyAfterDivision `shouldBe` expectedMoneyAfterDivision
 
         it "addition" $ do
-            let portfolio = Portfolio []
-
             let fiveDollars = newMoney 5 USD
             let tenDollars = newMoney 10 USD
             let fifteenDollars = Right (newMoney 15 USD)
 
-            let portfolio' = portfolio `add` fiveDollars
-            let portfolio'' = portfolio' `add` tenDollars
-            let portfolioInDollars = portfolio'' `evaluate` bank $ USD
+            let portfolio = [fiveDollars, tenDollars]
+            let portfolioInDollars = portfolio `evaluate` bank $ USD
 
             portfolioInDollars `shouldBe` fifteenDollars
 
         it "addition of dollars and euros" $ do
             let fiveDollars = newMoney 5 USD
             let tenEuros = newMoney 10 EUR
-            let portfolio = newPortfolio
-            let portfolio' = portfolio `add` fiveDollars
-            let portfolio'' = portfolio' `add` tenEuros
+            let portfolio = [fiveDollars, tenEuros]
 
             let expectedValue = Right (newMoney 17 USD)
-            let actualValue = portfolio'' `evaluate` bank $ USD
+            let actualValue = portfolio `evaluate` bank $ USD
 
             actualValue `shouldBe` expectedValue
 
         it "addition of dollars and wons" $ do
             let oneDollar = newMoney 1 USD
             let elevenHundredWon = newMoney 1100 KRW
-            let portfolio = newPortfolio `add` oneDollar
-            let portfolio' = portfolio `add` elevenHundredWon
+            let portfolio = [oneDollar, elevenHundredWon]
 
             let expectedValue = Right (newMoney 2200 KRW)
-            let actualValue = portfolio' `evaluate` bank $ KRW
+            let actualValue = portfolio `evaluate` bank $ KRW
 
             actualValue `shouldBe` expectedValue
 
@@ -70,12 +64,10 @@ main = hspec $
             let oneEuro = newMoney 1 EUR
             let oneWon = newMoney 1 KRW
 
-            let portfolio = newPortfolio `add` oneDollar
-            let portfolio' = portfolio `add` oneEuro
-            let portfolio'' = portfolio' `add` oneWon
+            let portfolio = [oneWon, oneEuro, oneDollar]
 
             let expectedErrorMessage = Left "Missing exchange rate(s): KRW->Kalganid, EUR->Kalganid, USD->Kalganid"
-            let actualError = portfolio'' `evaluate` bank $ Kalganid
+            let actualError = portfolio `evaluate` bank $ Kalganid
 
             actualError `shouldBe` expectedErrorMessage
 

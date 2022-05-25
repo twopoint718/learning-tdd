@@ -1,17 +1,14 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving, UndecidableInstances #-}
 module Stocks.Portfolio where
 
 import Data.List (intercalate)
+import GHC.Exts (IsList)
 
 import Stocks.Money
 import Stocks.Bank
 
-data Portfolio = Portfolio [Money]
-
-newPortfolio :: Portfolio
-newPortfolio = Portfolio []
-
-add :: Portfolio -> Money -> Portfolio
-add (Portfolio ms) money = Portfolio (money:ms)
+newtype Portfolio = Portfolio [Money]
+    deriving IsList
 
 evaluate :: Portfolio -> Bank -> Currency -> Either [Char] Money
 evaluate (Portfolio monies) bank targetCurrency =
